@@ -1,4 +1,4 @@
-package com.cleaver.rest.api.vo;
+package com.clevered.rest.api.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

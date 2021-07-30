@@ -1,4 +1,4 @@
-package com.cleaver.api.controller;
+package com.clevered.api.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cleaver.rest.api.vo.CodeResponse;
+import com.clevered.rest.api.vo.CodeResponse;
 
 /**
  * 
@@ -31,6 +31,9 @@ public class PythonCompilerController {
 
 	@Value("${app.base.url}")
 	private String appBaseUrl;
+	
+	@Value("${python.version.command}")
+	private String pythonVersionCommand;
 
 	private static String cprintLines(InputStream ins) throws Exception {
 		StringBuilder builder = new StringBuilder();
@@ -72,7 +75,7 @@ public class PythonCompilerController {
 		String codeOutput = "The is some problem at server while compiling code!";
 		try {
 			Files.write(Paths.get("Main.py"), pcode.getBytes());
-			codeOutput = crunProcess("py Main.py");
+			codeOutput = crunProcess(pythonVersionCommand+" Main.py");
 			if (codeOutput.contains("Main.py")) {
 				codeOutput = codeOutput.substring(codeOutput.indexOf("Main.py"));
 			}
@@ -81,7 +84,7 @@ public class PythonCompilerController {
 		}
 		CodeResponse codeResponse = new CodeResponse();
 		codeResponse.setInput("");
-		codeResponse.setOutput(generatedOutput);
+		codeResponse.setOutput(codeOutput);
 		if(codeOutput.contains("Main.py")) {
 			codeResponse.setStatus("fail");			
 		}else {

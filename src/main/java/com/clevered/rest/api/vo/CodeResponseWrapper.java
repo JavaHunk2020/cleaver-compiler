@@ -1,4 +1,4 @@
-package com.cleaver.rest.api.vo;
+package com.clevered.rest.api.vo;
 
 import java.util.List;
 
