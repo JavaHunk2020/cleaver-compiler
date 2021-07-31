@@ -68,9 +68,9 @@ public class PythonCompilerController {
 	 * @param model
 	 * @return
 	 */
-	@PostMapping("/compile/execute/code")
+	@PostMapping("/compile")
 	@ResponseBody
-	public synchronized CodeResponse compileCodeOnline(Model model, @RequestParam("pcode") String pcode) {
+	public synchronized CodeResponse compileCodeOnline(Model model, @RequestParam("code") String pcode) {
 		LOGGER.debug("pcode  [{}] ", pcode);
 		// Writing input into input.txt
 		String generatedOutput = "NA";
