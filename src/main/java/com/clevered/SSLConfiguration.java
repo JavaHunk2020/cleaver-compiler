@@ -1,4 +1,4 @@
-package com.clevered;
+/*package com.clevered;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
@@ -39,4 +39,4 @@ public class SSLConfiguration {
         return connector;
     }
 
-}
+}*/

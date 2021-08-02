@@ -68,6 +68,19 @@ public class PythonCompilerController {
 	@ResponseBody public String djdj() {
 		return "Hello MNe";
 	}
+	
+	
+	
+	@PostMapping("/test100")
+	@ResponseBody
+	public  CodeResponse test100() {
+		CodeResponse codeResponse=new CodeResponse();
+		codeResponse.setDescription("Testing");
+		codeResponse.setInput("1920");
+		codeResponse.setOutput("9303");
+		codeResponse.setStatus("success");
+		return codeResponse;
+	}
 
 	/**
 	 * 
