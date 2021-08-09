@@ -13,9 +13,28 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class CodeResponse {
 	private String status;
 	private String compilationError;
+	private boolean isGraph;
+	private String image;
 	private String input;
 	private String output;
 	private String description;
+	
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public boolean isGraph() {
+		return isGraph;
+	}
+
+	public void setGraph(boolean isGraph) {
+		this.isGraph = isGraph;
+	}
 
 	public String getInput() {
 		return input;
