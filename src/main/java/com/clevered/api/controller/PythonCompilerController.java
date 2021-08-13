@@ -1,11 +1,13 @@
 package com.clevered.api.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -72,16 +74,6 @@ public class PythonCompilerController {
 		return "Hello MNe";
 	}
 
-	@PostMapping("/test100")
-	@ResponseBody
-	public CodeResponse test100() {
-		CodeResponse codeResponse = new CodeResponse();
-		codeResponse.setDescription("Testing");
-		codeResponse.setInput("1920");
-		codeResponse.setOutput("9303");
-		codeResponse.setStatus("success");
-		return codeResponse;
-	}
 
 	/**
 	 * 
@@ -97,9 +89,10 @@ public class PythonCompilerController {
 		if (codeRequest.getCode().contains(".show()")) {
 			drawGraph = true;
 		}
-
+		CodeResponse codeResponse = new CodeResponse();
 		// replacing code .show() with savefig method to save the file
-		codeRequest.setCode(codeRequest.getCode().replace(".show()", ".savefig(\"graph100.png\")"));
+		String outputFileName = "cleaver100_" + new Random(98238).nextInt() + ".png";
+		codeRequest.setCode(codeRequest.getCode().replace(".show()", ".savefig('" + outputFileName + "')"));
 		// Writing input into input.txt
 		String codeOutput = "The is some problem at server while compiling code!";
 		try {
@@ -107,31 +100,39 @@ public class PythonCompilerController {
 			Files.write(Paths.get("Main.py"), codeRequest.getCode().getBytes());
 			codeOutput = crunProcess(pythonVersionCommand + " Main.py");
 			if (codeOutput.contains("Main.py")) {
+				codeResponse.setStatus("fail");
+				codeResponse.setIsError(true);
 				codeOutput = codeOutput.substring(codeOutput.indexOf("Main.py"));
-			}
+				codeResponse.setStderr(codeOutput);
 
-			if (drawGraph) {
+			} else {
+				codeResponse.setIsError(false);
+				codeResponse.setStatus("success");
+				codeResponse.setStdout(codeOutput);
+			}
+			codeOutput = codeOutput.replaceAll("\n", "<br/>");
+			LOGGER.debug("__________Text Code output_______________ = " + codeOutput);
+
+			if (drawGraph && "success".equalsIgnoreCase(codeResponse.getStatus())) {
 				// Reading the generate image/graph
-				byte[] graphs = Files.readAllBytes(Paths.get("graph100.png"));
+				byte[] graphs = Files.readAllBytes(Paths.get(outputFileName));
 				String encodedString = Base64.getEncoder().encodeToString(graphs);
-				codeOutput = codeOutput + "chartstart" + encodedString + "chartend";
+				codeResponse.setStdout(codeOutput+"chartstartb'"+encodedString+"'chartend");
+				codeResponse.setGraph(true);
 			}
 
 		} catch (Exception e) {
+			LOGGER.debug("Exception occurs while processing = " + e.getMessage());
 			e.printStackTrace();
+		} finally {
+			FileUtils.deleteQuietly(new File(codeOutput));
 		}
-		CodeResponse codeResponse = new CodeResponse();
-		codeResponse.setInput("");
-		codeResponse.setOutput(codeOutput);
-		if (codeOutput.contains("Main.py")) {
-			codeResponse.setStatus("fail");
-		} else {
-			codeResponse.setStatus("success");
+		
+		if (!drawGraph) {
+			LOGGER.debug("_________________________");
+			LOGGER.info(codeResponse.toString());
+			LOGGER.debug("_________________________");
 		}
-		codeResponse.setDescription(codeOutput);
-		LOGGER.debug("_________________________");
-		LOGGER.info(codeResponse.toString());
-		LOGGER.debug("_________________________");
 		return codeResponse;
 	}
 

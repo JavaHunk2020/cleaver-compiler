@@ -1,1 +1,1 @@
-import matplotlib.pyplot as plt; import numpy as np; x = np.array(["A", "B", "C", "D"]); y = np.array([3, 8, 1, 10]); plt.bar(x,y); plt.savefig("graph100.png");
+import matplotlib.pyplot as plt; import numpy as np; x = np.array(["A", "B", "C", "D"]); y = np.array([3, 8, 1, 10]); plt.bar(x,y);print("Helllo!") ; plt.savefig('cleaver100_-665375774.png');
