@@ -8,11 +8,32 @@ package com.clevered.rest.api.vo;
  */
 //@JsonInclude(value = Include.NON_NULL)
 public class CodeResponse {
-	private String status;
-	private boolean isGraph;
 	private boolean isError;
-	private String stdout;
-	private String stderr;
+	private String stdout="";
+	private String stderr="";
+	private String combined;
+	private boolean killedByContainer=false;
+	
+
+	public String getCombined() {
+		return combined;
+	}
+
+	public void setCombined(String combined) {
+		this.combined = combined;
+	}
+
+	public boolean isKilledByContainer() {
+		return killedByContainer;
+	}
+
+	public void setKilledByContainer(boolean killedByContainer) {
+		this.killedByContainer = killedByContainer;
+	}
+
+	public void setError(boolean isError) {
+		this.isError = isError;
+	}
 
 	public boolean getIsError() {
 		return isError;
@@ -38,26 +59,12 @@ public class CodeResponse {
 		this.stderr = stderr;
 	}
 
-	public boolean isGraph() {
-		return isGraph;
-	}
-
-	public void setGraph(boolean isGraph) {
-		this.isGraph = isGraph;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	@Override
 	public String toString() {
-		return "CodeResponse [status=" + status + ", isGraph=" + isGraph + ", isError=" + isError + ", stdout=" + stdout
-				+ ", stderr=" + stderr + "]";
+		return "CodeResponse [isError=" + isError + ", stdout=" + stdout + ", stderr=" + stderr + ", combined="
+				+ combined + ", killedByContainer=" + killedByContainer + "]";
 	}
+
+	
 
 }

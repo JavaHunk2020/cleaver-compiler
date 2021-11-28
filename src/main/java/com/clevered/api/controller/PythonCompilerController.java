@@ -84,7 +84,7 @@ public class PythonCompilerController {
 	@ResponseBody
 	public synchronized CodeResponse compileCodeOnline(@RequestBody CodeRequest codeRequest) {
 
-		LOGGER.debug("pcode  [{}] ", codeRequest.getCode());
+		// LOGGER.debug("pcode  [{}] ", codeRequest.getCode());
 		boolean drawGraph = false;
 		if (codeRequest.getCode().contains(".show()")) {
 			drawGraph = true;
@@ -97,41 +97,40 @@ public class PythonCompilerController {
 		String codeOutput = "The is some problem at server while compiling code!";
 		try {
 
-			Files.write(Paths.get("Main.py"), codeRequest.getCode().getBytes());
+        		Files.write(Paths.get("Main.py"), codeRequest.getCode().getBytes());
 			codeOutput = crunProcess(pythonVersionCommand + " Main.py");
 			if (codeOutput.contains("Main.py")) {
-				codeResponse.setStatus("fail");
 				codeResponse.setIsError(true);
 				codeOutput = codeOutput.substring(codeOutput.indexOf("Main.py"));
 				codeResponse.setStderr(codeOutput);
 
 			} else {
 				codeResponse.setIsError(false);
-				codeResponse.setStatus("success");
 				codeResponse.setStdout(codeOutput);
 			}
-			codeOutput = codeOutput.replaceAll("\n", "<br/>");
-			LOGGER.debug("__________Text Code output_______________ = " + codeOutput);
+			//codeOutput = codeOutput.replaceAll("\n", "<br/>");
+			//LOGGER.debug("__________Text Code output_______________ = " + codeOutput);
 
-			if (drawGraph && "success".equalsIgnoreCase(codeResponse.getStatus())) {
+			if (drawGraph && codeResponse.getIsError()==false) {
 				// Reading the generate image/graph
 				byte[] graphs = Files.readAllBytes(Paths.get(outputFileName));
 				String encodedString = Base64.getEncoder().encodeToString(graphs);
 				codeResponse.setStdout(codeOutput+"chartstartb'"+encodedString+"'chartend");
-				codeResponse.setGraph(true);
 			}
+			
+			codeResponse.setCombined(codeResponse.getStdout());
 
 		} catch (Exception e) {
-			LOGGER.debug("Exception occurs while processing = " + e.getMessage());
+			//LOGGER.debug("Exception occurs while processing = " + e.getMessage());
 			e.printStackTrace();
 		} finally {
 			FileUtils.deleteQuietly(new File(codeOutput));
 		}
 		
 		if (!drawGraph) {
-			LOGGER.debug("_________________________");
-			LOGGER.info(codeResponse.toString());
-			LOGGER.debug("_________________________");
+			//LOGGER.debug("_________________________");
+			//LOGGER.info(codeResponse.toString());
+			//LOGGER.debug("_________________________");
 		}
 		return codeResponse;
 	}
