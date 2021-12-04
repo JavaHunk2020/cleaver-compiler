@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.rmi.server.UID;
 import java.util.Base64;
-import java.util.Random;
+import java.util.Objects;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -41,6 +43,19 @@ public class PythonCompilerController {
 
 	@Value("${python.version.command}")
 	private String pythonVersionCommand;
+	
+	@Value("${flask.clevered.home}")
+	private String flaskCleveredHome;
+	
+	@Value("${flask.clevered.index}")
+	private String flaskCleveredIndex;
+	
+	@Value("${flask.clevered.first.home}")
+	private String flaskCleveredFirstHome;
+	
+	@Value("${flask.clevered.second.home}")
+	private String flaskCleveredSecondHome;
+	
 
 	private static String cprintLines(InputStream ins) throws Exception {
 		StringBuilder builder = new StringBuilder();
@@ -83,21 +98,39 @@ public class PythonCompilerController {
 	@PostMapping("/compile")
 	@ResponseBody
 	public synchronized CodeResponse compileCodeOnline(@RequestBody CodeRequest codeRequest) {
-
+		CodeResponse codeResponse = new CodeResponse();
 		// LOGGER.debug("pcode  [{}] ", codeRequest.getCode());
 		boolean drawGraph = false;
+		
+		if (codeRequest.getCode().contains("'index.html'")) {
+			codeResponse.setIsError(false);
+			codeResponse.setUrl(flaskCleveredIndex);
+			return codeResponse;
+		}else if (codeRequest.getCode().contains("'home.html'")) {
+			codeResponse.setIsError(false);
+			codeResponse.setUrl(flaskCleveredHome);
+			return codeResponse;
+		}else if (codeRequest.getCode().contains("'first_home.html'")) {
+			codeResponse.setIsError(false);
+			codeResponse.setUrl(flaskCleveredFirstHome);
+			return codeResponse;
+		}else if (codeRequest.getCode().contains("'second_home.html'")) {
+			codeResponse.setIsError(false);
+			codeResponse.setUrl(flaskCleveredSecondHome);
+			return codeResponse;
+		}
+		
 		if (codeRequest.getCode().contains(".show()")) {
 			drawGraph = true;
 		}
-		CodeResponse codeResponse = new CodeResponse();
 		// replacing code .show() with savefig method to save the file
-		String outputFileName = "cleaver100_" + new Random(98238).nextInt() + ".png";
+		String outputFileName = "cleaver100_" + UUID.randomUUID().toString() + ".png";
 		codeRequest.setCode(codeRequest.getCode().replace(".show()", ".savefig('" + outputFileName + "')"));
 		// Writing input into input.txt
 		String codeOutput = "The is some problem at server while compiling code!";
 		try {
 
-        		Files.write(Paths.get("Main.py"), codeRequest.getCode().getBytes());
+        	Files.write(Paths.get("Main.py"), codeRequest.getCode().getBytes());
 			codeOutput = crunProcess(pythonVersionCommand + " Main.py");
 			if (codeOutput.contains("Main.py")) {
 				codeResponse.setIsError(true);
@@ -141,6 +174,10 @@ public class PythonCompilerController {
 		BufferedReader in = new BufferedReader(new InputStreamReader(ins));
 		while ((line = in.readLine()) != null) {
 			builder.append(line + "\n");
+		}
+		
+		if(!Objects.isNull(in)) {
+			in.close();
 		}
 		return builder.toString();
 	}

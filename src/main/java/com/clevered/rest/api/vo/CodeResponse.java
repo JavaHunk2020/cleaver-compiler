@@ -12,8 +12,17 @@ public class CodeResponse {
 	private String stdout="";
 	private String stderr="";
 	private String combined;
+	private String url;
 	private boolean killedByContainer=false;
 	
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
 	public String getCombined() {
 		return combined;
