@@ -32,7 +32,7 @@ import com.clevered.rest.api.vo.CodeResponse;
  *
  */
 @Controller
-@CrossOrigin(origins = "*", allowedHeaders = "*", originPatterns = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/v4/python")
 public class PythonCompilerController {
 
