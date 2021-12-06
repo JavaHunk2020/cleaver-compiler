@@ -102,19 +102,19 @@ public class PythonCompilerController {
 		// LOGGER.debug("pcode  [{}] ", codeRequest.getCode());
 		boolean drawGraph = false;
 		
-		if (codeRequest.getCode().contains("'index.html'")) {
+		if (codeRequest.getCode().contains("index.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredIndex);
 			return codeResponse;
-		}else if (codeRequest.getCode().contains("'home.html'")) {
+		}else if (codeRequest.getCode().contains("home.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredHome);
 			return codeResponse;
-		}else if (codeRequest.getCode().contains("'first_home.html'")) {
+		}else if (codeRequest.getCode().contains("first_home.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredFirstHome);
 			return codeResponse;
-		}else if (codeRequest.getCode().contains("'second_home.html'")) {
+		}else if (codeRequest.getCode().contains("second_home.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredSecondHome);
 			return codeResponse;
