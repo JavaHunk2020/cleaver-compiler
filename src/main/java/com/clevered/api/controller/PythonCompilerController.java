@@ -105,18 +105,22 @@ public class PythonCompilerController {
 		if (codeRequest.getCode().contains("index.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredIndex);
+			codeResponse.setStdout(flaskCleveredIndex);
 			return codeResponse;
 		}else if (codeRequest.getCode().contains("home.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredHome);
+			codeResponse.setStdout(flaskCleveredHome);
 			return codeResponse;
 		}else if (codeRequest.getCode().contains("first_home.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredFirstHome);
+			codeResponse.setStdout(flaskCleveredFirstHome);
 			return codeResponse;
 		}else if (codeRequest.getCode().contains("second_home.html")) {
 			codeResponse.setIsError(false);
 			codeResponse.setUrl(flaskCleveredSecondHome);
+			codeResponse.setStdout(flaskCleveredSecondHome);
 			return codeResponse;
 		}
 		
